@@ -1,0 +1,150 @@
+{
+  "nextIds": {
+    "schools": 2,
+    "shows": 4,
+    "bookings": 8,
+    "paymentMethods": 2
+  },
+  "schools": [
+    {
+      "id": 1,
+      "name": "Nairobi School",
+      "contactName": "School bookings",
+      "email": "bookings@example.com",
+      "phone": "+254700000000",
+      "address": "Nairobi",
+      "createdAt": "2026-09-21T00:00:00.000Z"
+    }
+  ],
+  "shows": [
+    {
+      "id": 1,
+      "title": "The Last Letter",
+      "category": "Live production",
+      "description": "A moving stage story about choices, friendship and the price of silence.",
+      "venue": "Nairobi",
+      "eventDate": "2026-10-18",
+      "price": "From KSh 500",
+      "posterClass": "",
+      "active": true
+    },
+    {
+      "id": 2,
+      "title": "Behind the Mask",
+      "category": "Live production",
+      "description": "When the curtain rises, every character has something to hide.",
+      "venue": "KU",
+      "eventDate": "2026-11-02",
+      "price": "From KSh 400",
+      "posterClass": "two",
+      "active": true
+    },
+    {
+      "id": 3,
+      "title": "New Voices",
+      "category": "Coming soon",
+      "description": "A new generation of performers telling stories from their own world.",
+      "venue": "Kenya",
+      "eventDate": null,
+      "price": "Stay tuned",
+      "posterClass": "three",
+      "active": true
+    }
+  ],
+  "bookings": [
+    {
+      "id": 1,
+      "schoolId": 1,
+      "schoolName": "Nairobi School",
+      "contactName": "School bookings",
+      "email": "bookings@example.com",
+      "phone": "+254700000000",
+      "bookingDate": "2026-10-18",
+      "status": "confirmed",
+      "notes": "Seeded calendar reservation",
+      "createdAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "schoolId": 1,
+      "schoolName": "Nairobi School",
+      "contactName": "School bookings",
+      "email": "bookings@example.com",
+      "phone": "+254700000000",
+      "bookingDate": "2026-11-02",
+      "status": "confirmed",
+      "notes": "Seeded calendar reservation",
+      "createdAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "schoolId": 1,
+      "schoolName": "Nairobi School",
+      "contactName": "School bookings",
+      "email": "bookings@example.com",
+      "phone": "+254700000000",
+      "bookingDate": "2026-11-14",
+      "status": "confirmed",
+      "notes": "Seeded calendar reservation",
+      "createdAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "schoolId": 1,
+      "schoolName": "Nairobi School",
+      "contactName": "School bookings",
+      "email": "bookings@example.com",
+      "phone": "+254700000000",
+      "bookingDate": "2026-12-05",
+      "status": "confirmed",
+      "notes": "Seeded calendar reservation",
+      "createdAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "schoolId": null,
+      "schoolName": "Ahadi",
+      "contactName": "Prince",
+      "email": "ahadiprince221@gmail.com",
+      "phone": "0987665432",
+      "bookingDate": "2026-10-29",
+      "status": "pending",
+      "notes": "",
+      "createdAt": "2026-10-19T17:27:26.594Z"
+    },
+    {
+      "id": 6,
+      "schoolId": null,
+      "schoolName": "Ahadi",
+      "contactName": "Prince",
+      "email": "ahadiprince221@gmail.com",
+      "phone": "0987665432",
+      "bookingDate": "2026-10-19",
+      "status": "pending",
+      "notes": "",
+      "createdAt": "2026-10-19T17:27:42.888Z"
+    },
+    {
+      "id": 7,
+      "schoolId": null,
+      "schoolName": "Ahadi",
+      "contactName": "Prince",
+      "email": "ahadiprince221@gmail.com",
+      "phone": "0987665432",
+      "bookingDate": "2026-10-28",
+      "status": "pending",
+      "notes": "",
+      "createdAt": "2026-10-19T17:27:53.067Z"
+    }
+  ],
+  "paymentMethods": [
+    {
+      "id": 1,
+      "name": "M-Pesa",
+      "provider": "Safaricom",
+      "accountReference": "VOICE-OF-ART",
+      "instructions": "Payment instructions are confirmed by the production team after booking.",
+      "active": true
+    }
+  ]
+}
