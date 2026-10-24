@@ -1,0 +1,3 @@
+# This file keeps the uploads/ directory in git.
+# Actual uploaded video/image files are gitignored.
+# The server creates this directory automatically on startup.

@@ -1,23 +1,5 @@
 import React, { useState } from "react";
-import { TicketIcon, ShieldLockIcon } from "./Icons";
-
-export function SearchIcon({ className = "icon", size = 18 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <circle cx="11" cy="11" r="8"></circle>
-      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-    </svg>
-  );
-}
-
-export function UserIcon({ className = "icon", size = 18 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
-    </svg>
-  );
-}
+import { TicketIcon, SearchIcon, UserIcon } from "./Icons";
 
 export default function EditorialHeader({
   activeNav,
@@ -118,15 +100,6 @@ export default function EditorialHeader({
           >
             <TicketIcon size={16} />
             <span>Book Tickets</span>
-          </button>
-
-          <button
-            className="editorial-icon-btn"
-            onClick={onOpenAdmin}
-            aria-label="Admin Dashboard"
-            title="Admin Login"
-          >
-            <UserIcon size={19} />
           </button>
 
           <button

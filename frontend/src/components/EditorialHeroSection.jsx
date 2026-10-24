@@ -1,296 +1,313 @@
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, PlayIcon } from "./Icons";
+import React, { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight, PlayIcon, TicketIcon, SparklesIcon } from "./Icons";
+import api from "../api";
 
-export const heroSlides = [
-  {
-    id: "last-letter",
-    eyebrow: "THEATRE • FILM • LEARNING",
-    title: "Real Stories.",
-    accentWord: "Live",
-    titleEnd: "on Stage.",
-    description:
-      "Experience captivating theatrical productions, bring live drama to your school hall, and relive unforgettable stage stories anytime, anywhere.",
-    buttonText: "Book Tickets Now",
-    showTitle: "The Last Letter",
-    eventDate: "2026-10-18",
-    image: "/hero-stage.jpg",
-  },
-  {
-    id: "behind-mask",
-    eyebrow: "DRAMA • MYSTERY • PSYCHOLOGY",
-    title: "Behind the",
-    accentWord: "Mask",
-    titleEnd: "Unveiled.",
-    description:
-      "When the curtain rises, every family member has something to hide. A razor-sharp Kenyan stage thriller.",
-    buttonText: "Reserve KU Stage Tickets",
-    showTitle: "Behind the Mask",
-    eventDate: "2026-11-02",
-    image: "/theatre-mask.jpg",
-  },
-  {
-    id: "stagecraft",
-    eyebrow: "ORIGINAL KENYAN WRITING",
-    title: "Voices from the",
-    accentWord: "Heart",
-    titleEnd: "of Nairobi.",
-    description:
-      "Original stage writing, vibrant directing, and raw youth storytelling touring schools and national auditoriums.",
-    buttonText: "Explore Season Passes",
-    showTitle: "New Voices",
-    eventDate: "2026-11-20",
-    image: "/theatre-curtains.jpg",
-  },
-  {
-    id: "curtain-call",
-    eyebrow: "STAGE ENSEMBLE TOUR",
-    title: "Every Voice",
-    accentWord: "Matters",
-    titleEnd: "on Stage.",
-    description:
-      "Connecting young artists, performers, and secondary school learners through transformative theatrical workshops.",
-    buttonText: "Book School Tour",
-    showTitle: "School Tour: Set Book Drama",
-    eventDate: "2026-11-14",
-    image: "/theatre-cast.jpg",
-  },
-];
+// ── Brand-only slide shown when no media is uploaded yet ────────────────────
+function BrandSlide({ onOpenBooking }) {
+  return (
+    <div className="editorial-hero-brand-slide">
+      <div className="editorial-hero-left">
+        <p className="editorial-eyebrow-label">THEATRE • FILM • LEARNING</p>
+        <h1 className="editorial-hero-headline font-serif">
+          Real Stories.<br />
+          <span className="editorial-hero-accent">Live</span> on Stage.
+        </h1>
+        <p className="editorial-hero-description">
+          Experience captivating theatrical productions, bring live drama to your school hall,
+          and relive unforgettable stage stories anytime, anywhere.
+        </p>
+        <div className="editorial-hero-cta-row">
+          <button
+            className="btn btn-primary editorial-hero-cta-primary"
+            onClick={() => onOpenBooking("", "")}
+          >
+            <TicketIcon size={18} />
+            <span>Book Tickets Now</span>
+          </button>
+          <button className="btn btn-secondary editorial-hero-cta-ghost">
+            <SparklesIcon size={16} />
+            <span>Explore Productions</span>
+          </button>
+        </div>
+      </div>
 
-export const upcomingVideos = [
-  {
-    id: "mask-confrontation",
-    title: "Behind the Mask – The Confrontation Scene",
-    category: "Drama",
-    venue: "Kenyatta University Theatre",
-    duration: "3:42",
-    thumb: "/theatre-mask.jpg",
-    showTitle: "Behind the Mask",
-    eventDate: "2026-11-02",
-  },
-  {
-    id: "spoken-word",
-    title: "Spoken Word Spotlight: Young Nairobi Poets",
-    category: "Poetry",
-    venue: "Kenya Cultural Tour",
-    duration: "4:48",
-    thumb: "/hero-stage.jpg",
-    showTitle: "New Voices",
-    eventDate: "2026-11-20",
-  },
-  {
-    id: "stagecraft-doc",
-    title: "The Art of Stagecraft",
-    category: "Documentary",
-    venue: "VOAP Studios",
-    duration: "7:26",
-    thumb: "/theatre-curtains.jpg",
-    showTitle: "The Last Letter",
-    eventDate: "2026-10-18",
-  },
-];
+      <div className="editorial-hero-right editorial-hero-right--empty">
+        <div className="hero-empty-stage">
+          <div className="hero-empty-curtain">🎭</div>
+          <p>Your stage videos will appear here</p>
+          <small>Upload from the Admin → Media panel</small>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-export default function EditorialHeroSection({
-  onOpenBooking,
-  onPlayVideo,
-  onNavigate,
-}) {
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+// ── Slide built from an uploaded video ──────────────────────────────────────
+function MediaSlide({ item, onOpenBooking, onPlayVideo }) {
+  const videoUrl = `/uploads/${item.filename}`;
+  const isVideo = item.mediaType === "video";
 
-  const slide = heroSlides[currentSlideIndex];
-
-  const nextSlide = () => {
-    setCurrentSlideIndex((prev) => (prev + 1) % heroSlides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlideIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  const handlePlay = () => {
+    if (onPlayVideo) {
+      onPlayVideo({
+        title: item.title,
+        category: item.category,
+        venue: item.venue,
+        duration: item.duration,
+        thumb: videoUrl,
+        src: videoUrl,
+        showTitle: item.showTitle || item.title,
+        eventDate: item.eventDate,
+      });
+    }
   };
 
   return (
-    <section className="editorial-hero-section">
-      <div className="editorial-hero-grid">
-        {/* Left Column: Big Spotlight Stage Showcase */}
-        <div
-          className="editorial-hero-card"
-          style={{ backgroundImage: `url(${slide.image})` }}
-        >
-          {/* Subtle natural dark gradient fade so text is legible and mood is theatrical */}
-          <div className="editorial-hero-vignette"></div>
-
-          <div className="editorial-hero-content">
-            <div className="editorial-eyebrow">{slide.eyebrow}</div>
-
-            <h1 className="editorial-hero-title font-serif">
-              {slide.title}{" "}
-              <span className="editorial-gold-accent">{slide.accentWord}</span>{" "}
-              {slide.titleEnd}
-            </h1>
-
-            <p className="editorial-hero-desc">{slide.description}</p>
-
-            <div className="editorial-hero-action-row">
-              <button
-                className="editorial-btn-ivory"
-                onClick={() => onOpenBooking(slide.showTitle, slide.eventDate)}
-              >
-                <span>{slide.buttonText}</span>
-                <span className="btn-arrow">→</span>
-              </button>
-
-              <button
-                className="editorial-btn-watch-trailer"
-                onClick={() =>
-                  onPlayVideo({
-                    title: `${slide.showTitle} – Official Stage Trailer`,
-                    category: slide.eyebrow,
-                    duration: "2:15",
-                    thumb: slide.image,
-                    showTitle: slide.showTitle,
-                    eventDate: slide.eventDate,
-                  })
-                }
-              >
-                <PlayIcon size={16} fill="currentColor" />
-                <span>Watch Trailer</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Bottom Slider Indicators and Arrows */}
-          <div className="editorial-hero-footer">
-            <div className="editorial-dots">
-              {heroSlides.map((_, idx) => (
-                <button
-                  key={idx}
-                  className={`editorial-dot ${idx === currentSlideIndex ? "active" : ""}`}
-                  onClick={() => setCurrentSlideIndex(idx)}
-                  aria-label={`Go to slide ${idx + 1}`}
-                />
-              ))}
-            </div>
-
-            <div className="editorial-slider-arrows">
-              <button
-                className="editorial-arrow-btn"
-                onClick={prevSlide}
-                aria-label="Previous slide"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button
-                className="editorial-arrow-btn"
-                onClick={nextSlide}
-                aria-label="Next slide"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Continue Watching + Upcoming & Featured */}
-        <div className="editorial-rail">
-          {/* Continue Watching Card */}
-          <div className="editorial-rail-block">
-            <div className="editorial-rail-header">
-              <h3 className="editorial-rail-title">
-                <span className="play-triangle">▷</span> Continue Watching
-              </h3>
-              <button
-                className="editorial-view-all"
-                onClick={() => onNavigate("watch")}
-              >
-                View All →
-              </button>
-            </div>
-
-            <div
-              className="editorial-watch-card"
-              onClick={() =>
-                onPlayVideo({
-                  title: "The Last Letter – Official Stage Trailer",
-                  category: "Drama",
-                  venue: "National Theatre",
-                  duration: "2:15:42",
-                  thumb: "/hero-stage.jpg",
-                  showTitle: "The Last Letter",
-                  eventDate: "2026-10-18",
-                })
-              }
+    <div className="editorial-hero-brand-slide">
+      {/* Left: text */}
+      <div className="editorial-hero-left">
+        <p className="editorial-eyebrow-label">{item.category || "THEATRE • FILM • LEARNING"}</p>
+        <h1 className="editorial-hero-headline font-serif">
+          {item.title.split(" ").slice(0, -1).join(" ")}{" "}
+          <span className="editorial-hero-accent">
+            {item.title.split(" ").slice(-1)[0]}
+          </span>
+        </h1>
+        {item.description && (
+          <p className="editorial-hero-description">{item.description}</p>
+        )}
+        <div className="editorial-hero-cta-row">
+          {item.showTitle && item.eventDate && (
+            <button
+              className="btn btn-primary editorial-hero-cta-primary"
+              onClick={() => onOpenBooking(item.showTitle, item.eventDate)}
             >
-              <div
-                className="editorial-watch-thumb"
-                style={{ backgroundImage: `url('/hero-stage.jpg')` }}
-              >
-                <div className="editorial-live-badge">
-                  <span className="editorial-live-dot">●</span>
-                  <span>LIVE</span>
-                </div>
+              <TicketIcon size={18} />
+              <span>Book Tickets</span>
+            </button>
+          )}
+          {isVideo && (
+            <button className="btn btn-secondary editorial-hero-cta-ghost" onClick={handlePlay}>
+              <PlayIcon size={16} fill="currentColor" />
+              <span>Watch Clip</span>
+            </button>
+          )}
+        </div>
+        {item.venue && (
+          <p className="hero-venue-tag">📍 {item.venue}{item.eventDate ? ` · ${item.eventDate}` : ""}</p>
+        )}
+        {item.price && (
+          <p className="hero-price-tag">{item.price}</p>
+        )}
+      </div>
 
-                <span className="editorial-duration-badge">2:15:42</span>
-
-                <div className="editorial-thumb-play-overlay">
-                  <PlayIcon size={24} fill="#fff" />
-                </div>
-              </div>
-
-              <div className="editorial-watch-meta">
-                <h4 className="editorial-watch-title">
-                  The Last Letter – Official Stage Trailer
-                </h4>
-                <p className="editorial-watch-sub">Drama • National Theatre</p>
-
-                {/* Simulated watch progress bar */}
-                <div className="editorial-watch-progress-track">
-                  <div
-                    className="editorial-watch-progress-bar"
-                    style={{ width: "65%" }}
-                  ></div>
-                </div>
+      {/* Right: video / image preview */}
+      <div className="editorial-hero-right">
+        <div className="hero-media-frame" onClick={handlePlay}>
+          {isVideo ? (
+            <video
+              src={videoUrl}
+              className="hero-media-asset"
+              preload="metadata"
+              muted
+              loop
+              autoPlay
+              playsInline
+            />
+          ) : (
+            <img src={videoUrl} alt={item.title} className="hero-media-asset" />
+          )}
+          {isVideo && (
+            <div className="hero-play-overlay">
+              <div className="hero-play-btn">
+                <PlayIcon size={28} fill="#080808" />
               </div>
             </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Upcoming sidebar item ────────────────────────────────────────────────────
+function UpcomingItem({ item, onPlayVideo }) {
+  const videoUrl = `/uploads/${item.filename}`;
+  const isVideo = item.mediaType === "video";
+
+  return (
+    <div
+      className="hero-upcoming-item"
+      onClick={() =>
+        onPlayVideo &&
+        onPlayVideo({
+          title: item.title,
+          category: item.category,
+          src: videoUrl,
+          thumb: videoUrl,
+          showTitle: item.showTitle || item.title,
+          eventDate: item.eventDate,
+        })
+      }
+    >
+      <div className="hero-upcoming-thumb">
+        {isVideo ? (
+          <video src={videoUrl} preload="metadata" muted playsInline className="upcoming-thumb-media" />
+        ) : (
+          <img src={videoUrl} alt={item.title} className="upcoming-thumb-media" />
+        )}
+        {isVideo && (
+          <div className="upcoming-play-icon">
+            <PlayIcon size={14} fill="#fff" />
           </div>
+        )}
+      </div>
+      <div className="hero-upcoming-info">
+        <span className="upcoming-category">{item.category}</span>
+        <p className="upcoming-title">{item.title}</p>
+        {item.venue && <p className="upcoming-venue">📍 {item.venue}</p>}
+      </div>
+    </div>
+  );
+}
 
-          {/* Upcoming & Featured List */}
-          <div className="editorial-rail-block">
-            <div className="editorial-rail-header">
-              <h3 className="editorial-rail-title">
-                <span className="calendar-symbol">📅</span> Upcoming & Featured
-              </h3>
-              <button
-                className="editorial-view-all"
-                onClick={() => onNavigate("shows")}
-              >
-                View All →
-              </button>
-            </div>
+// ─────────────────────────────────────────────────────────────────────────────
+export default function EditorialHeroSection({ onOpenBooking, onPlayVideo }) {
+  const [allMedia, setAllMedia] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const timerRef = useRef(null);
 
-            <div className="editorial-upcoming-list">
-              {upcomingVideos.map((item) => (
-                <div
-                  key={item.id}
-                  className="editorial-upcoming-item"
-                  onClick={() => onPlayVideo(item)}
-                >
+  useEffect(() => {
+    api
+      .getMedia()
+      .then((data) => {
+        setAllMedia(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  // Featured items for the main slider (featured flag, or first 3 if none marked)
+  const featured = allMedia.filter((m) => m.featured);
+  const heroItems = featured.length > 0 ? featured : allMedia.slice(0, 3);
+
+  // Upcoming: recent non-featured items, max 4
+  const upcoming = allMedia
+    .filter((m) => !heroItems.some((h) => h.id === m.id))
+    .slice(0, 4);
+
+  // Auto-advance slides
+  useEffect(() => {
+    if (heroItems.length <= 1) return;
+    timerRef.current = setInterval(() => {
+      setCurrentSlide((s) => (s + 1) % heroItems.length);
+    }, 6000);
+    return () => clearInterval(timerRef.current);
+  }, [heroItems.length]);
+
+  const goTo = (idx) => {
+    clearInterval(timerRef.current);
+    setCurrentSlide(Math.max(0, Math.min(idx, heroItems.length - 1)));
+  };
+
+  if (loading) {
+    return (
+      <section className="editorial-hero-section">
+        <div className="editorial-container editorial-skeleton-block" style={{ minHeight: 420, borderRadius: 8 }} />
+      </section>
+    );
+  }
+
+  const hasMedia = heroItems.length > 0;
+
+  return (
+    <section className="editorial-hero-section">
+      <div className="editorial-container">
+        <div className="editorial-hero-grid">
+
+          {/* ── Main hero slider ─────────────────────────────────── */}
+          <div className="editorial-hero-main">
+            <div className="editorial-hero-slides-wrap">
+              {!hasMedia ? (
+                <BrandSlide onOpenBooking={onOpenBooking} />
+              ) : (
+                heroItems.map((item, idx) => (
                   <div
-                    className="editorial-item-thumb"
-                    style={{ backgroundImage: `url(${item.thumb})` }}
+                    key={item.id}
+                    className={`editorial-hero-slide ${idx === currentSlide ? "active" : ""}`}
+                    style={{ display: idx === currentSlide ? "flex" : "none" }}
                   >
-                    <span className="editorial-item-time">{item.duration}</span>
+                    <MediaSlide
+                      item={item}
+                      onOpenBooking={onOpenBooking}
+                      onPlayVideo={onPlayVideo}
+                    />
                   </div>
-
-                  <div className="editorial-item-info">
-                    <h5 className="editorial-item-title">{item.title}</h5>
-                    <p className="editorial-item-venue">
-                      {item.category} • {item.venue}
-                    </p>
-                  </div>
-
-                  <span className="editorial-item-arrow">›</span>
-                </div>
-              ))}
+                ))
+              )}
             </div>
+
+            {/* Slide controls */}
+            {heroItems.length > 1 && (
+              <div className="editorial-hero-controls">
+                <button
+                  className="hero-nav-btn"
+                  onClick={() => goTo((currentSlide - 1 + heroItems.length) % heroItems.length)}
+                  aria-label="Previous"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <div className="hero-dots">
+                  {heroItems.map((_, i) => (
+                    <button
+                      key={i}
+                      className={`hero-dot ${i === currentSlide ? "active" : ""}`}
+                      onClick={() => goTo(i)}
+                      aria-label={`Slide ${i + 1}`}
+                    />
+                  ))}
+                </div>
+                <button
+                  className="hero-nav-btn"
+                  onClick={() => goTo((currentSlide + 1) % heroItems.length)}
+                  aria-label="Next"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            )}
           </div>
+
+          {/* ── Upcoming sidebar ──────────────────────────────────── */}
+          {upcoming.length > 0 && (
+            <aside className="editorial-hero-upcoming">
+              <div className="upcoming-panel-head">
+                <span className="eyebrow">CONTINUE WATCHING</span>
+              </div>
+              <div className="upcoming-list">
+                {upcoming.map((item) => (
+                  <UpcomingItem
+                    key={item.id}
+                    item={item}
+                    onPlayVideo={onPlayVideo}
+                  />
+                ))}
+              </div>
+            </aside>
+          )}
+
+          {/* When no upcoming, show brand message */}
+          {!hasMedia && (
+            <aside className="editorial-hero-upcoming editorial-hero-upcoming--empty">
+              <div className="upcoming-panel-head">
+                <span className="eyebrow">CONTINUE WATCHING</span>
+              </div>
+              <div className="hero-sidebar-empty">
+                <p>Upload videos and they'll appear here for your audience.</p>
+              </div>
+            </aside>
+          )}
         </div>
       </div>
     </section>

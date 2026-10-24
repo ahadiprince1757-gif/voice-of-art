@@ -3,8 +3,10 @@
     "schools": 2,
     "shows": 4,
     "bookings": 8,
-    "paymentMethods": 2
+    "paymentMethods": 2,
+    "media": 1
   },
+  "media": [],
   "schools": [
     {
       "id": 1,

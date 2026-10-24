@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import EditorialHeader from "./components/EditorialHeader";
 import EditorialHeroSection from "./components/EditorialHeroSection";
 import EditorialShowsRail from "./components/EditorialShowsRail";
+import StageWatchFeed from "./components/StageWatchFeed";
 import EditorialVideoModal from "./components/EditorialVideoModal";
 import BookingModal from "./components/BookingModal";
 import SchoolCalendar from "./components/SchoolCalendar";
@@ -30,8 +31,8 @@ export default function App() {
   };
 
   const handleOpenBooking = (showTitle = "", date = "") => {
-    setSelectedShowForBooking(showTitle || "The Last Letter");
-    setSelectedDateForBooking(date || "2026-10-18");
+    setSelectedShowForBooking(showTitle);
+    setSelectedDateForBooking(date);
     setBookingModalOpen(true);
   };
 
@@ -43,19 +44,11 @@ export default function App() {
     setActiveNav(navId);
     if (navId === "schools") {
       setSchoolModalOpen(true);
-    } else if (navId === "watch" || navId === "live") {
-      // open the spotlight trailer immediately
-      handlePlayVideo({
-        title: "The Last Letter – Official Stage Trailer",
-        category: "Drama",
-        venue: "Nairobi National Theatre",
-        duration: "2:15:42",
-        thumb: "/hero-stage.jpg",
-        showTitle: "The Last Letter",
-        eventDate: "2026-10-18",
-      });
     } else if (navId === "home") {
       window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (navId === "watch" || navId === "live") {
+      const el = document.getElementById("watch-feed");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
     } else {
       const el = document.getElementById("productions");
       if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -82,11 +75,21 @@ export default function App() {
           onNavigate={handleNavClick}
         />
 
-        {/* Categories & 4 Theatrical Cards Row */}
+        {/* Video Watch Feed */}
+        <div id="watch-feed">
+          <StageWatchFeed
+            onOpenBooking={handleOpenBooking}
+            onToast={showToast}
+            onOpenAdmin={() => setAdminModalOpen(true)}
+          />
+        </div>
+
+        {/* Categories & Shows Rail */}
         <div id="productions">
           <EditorialShowsRail
             onOpenBooking={handleOpenBooking}
             onPlayVideo={handlePlayVideo}
+            searchQuery={searchQuery}
           />
         </div>
       </main>
@@ -96,14 +99,10 @@ export default function App() {
         onNavigate={handleNavClick}
         onOpenBooking={() => handleOpenBooking()}
         onOpenSchoolBookings={() => setSchoolModalOpen(true)}
-        onOpenWatch={() =>
-          handlePlayVideo({
-            title: "The Last Letter – Official Stage Trailer",
-            thumb: "/hero-stage.jpg",
-            showTitle: "The Last Letter",
-            eventDate: "2026-10-18",
-          })
-        }
+        onOpenWatch={() => {
+          const el = document.getElementById("watch-feed");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }}
         onOpenAdmin={() => setAdminModalOpen(true)}
       />
 

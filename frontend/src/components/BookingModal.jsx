@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
+import { useShows } from "../hooks/useShows";
 import { XIcon, TicketIcon, CheckIcon } from "./Icons";
 
-export default function BookingModal({ initialShow, initialDate, onClose, onSuccess, onToast }) {
-  const [showTitle, setShowTitle] = useState(initialShow || "The Last Letter");
-  const [bookingDate, setBookingDate] = useState(initialDate || "2026-10-18");
+export default function BookingModal({ initialShow, initialDate, onClose, onToast }) {
+  const [showTitle, setShowTitle] = useState(initialShow || "");
+  const [bookingDate, setBookingDate] = useState(initialDate || "");
   const [tickets, setTickets] = useState("2 tickets");
   const [schoolName, setSchoolName] = useState("");
   const [contactName, setContactName] = useState("");
@@ -14,10 +15,21 @@ export default function BookingModal({ initialShow, initialDate, onClose, onSucc
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState(null);
 
+  // Fetch live shows list for the dropdown
+  const { shows: availableShows, loading: showsLoading } = useShows();
+
+  // When the parent opens the modal with a specific show/date, sync them
   useEffect(() => {
     if (initialShow) setShowTitle(initialShow);
     if (initialDate) setBookingDate(initialDate);
   }, [initialShow, initialDate]);
+
+  // When shows load, set a default selection if none is pre-selected
+  useEffect(() => {
+    if (!showTitle && availableShows.length > 0) {
+      setShowTitle(availableShows[0].title);
+    }
+  }, [availableShows, showTitle]);
 
   useEffect(() => {
     api
@@ -32,8 +44,24 @@ export default function BookingModal({ initialShow, initialDate, onClose, onSucc
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Field presence checks
     if (!contactName.trim() || !email.trim() || !phone.trim()) {
       onToast("Please complete your contact name, email and phone number.", "error");
+      return;
+    }
+
+    // Email format check
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(email.trim())) {
+      onToast("Please enter a valid email address.", "error");
+      return;
+    }
+
+    // Phone minimum length (Kenyan numbers are at least 9 digits)
+    const digitsOnly = phone.replace(/\D/g, "");
+    if (digitsOnly.length < 9) {
+      onToast("Please enter a valid phone number (at least 9 digits).", "error");
       return;
     }
 
@@ -52,7 +80,6 @@ export default function BookingModal({ initialShow, initialDate, onClose, onSucc
 
       await api.createBooking(payload);
       onToast("🎉 Booking request received! We will contact you shortly.");
-      onSuccess();
       onClose();
     } catch (err) {
       console.error(err);
@@ -94,11 +121,29 @@ export default function BookingModal({ initialShow, initialDate, onClose, onSucc
               className="form-select"
               value={showTitle}
               onChange={(e) => setShowTitle(e.target.value)}
+              disabled={showsLoading}
             >
-              <option value="The Last Letter">The Last Letter (Nairobi • From KSh 500)</option>
-              <option value="Behind the Mask">Behind the Mask (KU • From KSh 400)</option>
-              <option value="New Voices">New Voices (Upcoming Showcase)</option>
-              <option value="School Stage Visit">School Stage Visit (Custom Performance)</option>
+              {showsLoading && (
+                <option value="">Loading productions...</option>
+              )}
+              {!showsLoading && availableShows.length > 0
+                ? availableShows.map((show) => (
+                    <option key={show.id} value={show.title}>
+                      {show.title}
+                      {show.venue ? ` — ${show.venue}` : ""}
+                      {show.price ? ` (${show.price})` : ""}
+                    </option>
+                  ))
+                : !showsLoading && (
+                    // Fallback if API returned empty
+                    <>
+                      <option value="The Last Letter">The Last Letter (Nairobi • From KSh 500)</option>
+                      <option value="Behind the Mask">Behind the Mask (KU • From KSh 400)</option>
+                      <option value="New Voices">New Voices (Upcoming Showcase)</option>
+                      <option value="School Stage Visit">School Stage Visit (Custom Performance)</option>
+                    </>
+                  )
+              }
             </select>
           </div>
 

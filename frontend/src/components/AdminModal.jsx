@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
+import MediaManager from "./MediaManager";
 import { XIcon, ShieldLockIcon, CheckIcon, SchoolIcon } from "./Icons";
 
 export default function AdminModal({ onClose, onToast }) {
   const [token, setToken] = useState(() => localStorage.getItem("voa_admin_token") || "");
-  const [email, setEmail] = useState("admin@voiceofart.co.ke");
-  const [password, setPassword] = useState("change-this-password");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [schools, setSchools] = useState([]);
@@ -148,6 +149,13 @@ export default function AdminModal({ onClose, onToast }) {
                 >
                   Schools ({schools.length})
                 </button>
+                <button
+                  className={`btn ${activeTab === "media" ? "btn-primary" : "btn-secondary"}`}
+                  style={{ padding: "8px 16px", fontSize: "0.85rem" }}
+                  onClick={() => setActiveTab("media")}
+                >
+                  🎬 Media
+                </button>
               </div>
 
               <button
@@ -161,6 +169,8 @@ export default function AdminModal({ onClose, onToast }) {
 
             {isLoadingData ? (
               <p style={{ padding: "30px", textAlign: "center", color: "#64748b" }}>Loading database records...</p>
+            ) : activeTab === "media" ? (
+              <MediaManager token={token} onToast={onToast} />
             ) : activeTab === "bookings" ? (
               <div style={{ overflowX: "auto" }}>
                 <table className="admin-table">
@@ -229,7 +239,13 @@ export default function AdminModal({ onClose, onToast }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {schools.map((s) => (
+                    {schools.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" style={{ textAlign: "center", color: "#64748b", padding: "24px" }}>
+                          No schools registered yet.
+                        </td>
+                      </tr>
+                    ) : schools.map((s) => (
                       <tr key={s.id}>
                         <td>#{s.id}</td>
                         <td><strong>{s.name}</strong></td>

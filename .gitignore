@@ -31,3 +31,11 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Uploaded media files — never commit user content to the repo.
+# The uploads/ folder is created automatically when the server starts.
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Antigravity IDE / agent config
+.agents/
