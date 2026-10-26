@@ -45,10 +45,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "VITE_SUPABASE_URL": "@voa_supabase_url",
-    "VITE_SUPABASE_ANON_KEY": "@voa_supabase_anon_key",
-    "VITE_API_URL": "@voa_api_url"
-  }
+  ]
 }
