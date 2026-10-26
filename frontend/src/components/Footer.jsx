@@ -1,12 +1,9 @@
 import React from "react";
-import { ShieldLockIcon } from "./Icons";
 
 export default function Footer({
   onNavigate,
   onOpenBooking,
   onOpenSchoolBookings,
-  onOpenWatch,
-  onOpenAdmin,
 }) {
   return (
     <footer className="editorial-footer">
@@ -44,10 +41,6 @@ export default function Footer({
                 Book Tickets Now →
               </button>
               <button onClick={onOpenSchoolBookings}>Host School Performance</button>
-              <button onClick={onOpenAdmin}>
-                <ShieldLockIcon size={13} />
-                <span>Admin Portal</span>
-              </button>
             </div>
 
             <div className="footer-col">

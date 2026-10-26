@@ -5,7 +5,6 @@ export default function EditorialHeader({
   activeNav,
   onNavClick,
   onOpenBooking,
-  onOpenAdmin,
   searchQuery,
   onSearchChange,
 }) {

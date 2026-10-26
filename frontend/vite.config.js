@@ -7,7 +7,13 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      // Backend API
       '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      // Uploaded media files served by backend during development
+      '/uploads': {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },

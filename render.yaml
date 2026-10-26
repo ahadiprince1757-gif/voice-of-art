@@ -1,0 +1,50 @@
+# render.yaml — Render Blueprint for Voice of Art Productions
+# Docs: https://render.com/docs/blueprint-spec
+#
+# This file defines the backend web service.
+# Commit this file to your repo root — Render auto-detects it.
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  # ── Backend API (Node.js) ───────────────────────────────────────────────────
+  - type: web
+    name: voice-of-art-api
+    runtime: node
+    region: frankfurt          # closest available region to Kenya
+    plan: free                 # change to 'starter' before public launch ($7/mo)
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/shows
+    autoDeploy: true           # auto-redeploy on every push to main branch
+
+    envVars:
+      # ── Server ────────────────────────────────────────────────────────────
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: 10000
+
+      # ── Admin credentials ─────────────────────────────────────────────────
+      # Set real values in the Render dashboard — do NOT hardcode them here.
+      - key: ADMIN_EMAIL
+        sync: false            # "sync: false" = you must set this in the dashboard
+
+      - key: ADMIN_PASSWORD
+        sync: false
+
+      - key: TOKEN_SECRET
+        generateValue: true    # Render auto-generates a secure random value
+
+      # ── Supabase ──────────────────────────────────────────────────────────
+      - key: SUPABASE_URL
+        sync: false            # paste from Supabase → Settings → API
+
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false            # paste from Supabase → Settings → API (secret key)
+
+      # ── CORS ──────────────────────────────────────────────────────────────
+      # Add your Vercel URL and custom domain after deploying
+      - key: ALLOWED_ORIGINS
+        value: https://voice-of-art.vercel.app

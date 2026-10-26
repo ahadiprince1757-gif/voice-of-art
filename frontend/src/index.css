@@ -3178,3 +3178,225 @@ footer.editorial-footer {
 @media (max-width: 480px) {
   .mm-grid { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Management Console (/management) — hidden admin interface
+   Never linked from the public app.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Loading state */
+.mgmt-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  color: var(--text-dim);
+  gap: 16px;
+  font-size: 0.9rem;
+}
+.mgmt-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: mgmt-spin 0.7s linear infinite;
+}
+@keyframes mgmt-spin { to { transform: rotate(360deg); } }
+
+/* ── Login page ──────────────────────────────────────────────────────────── */
+.mgmt-login-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at top, #0c182c 0%, #07111f 70%);
+  padding: 24px;
+}
+
+.mgmt-login-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(16, 31, 56, 0.95);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px 40px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  backdrop-filter: blur(16px);
+}
+
+.mgmt-login-brand {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.mgmt-login-logo {
+  width: 56px; height: 56px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+.mgmt-login-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-light);
+  letter-spacing: 0.04em;
+  font-family: 'Playfair Display', Georgia, serif;
+  margin-bottom: 4px;
+}
+.mgmt-login-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.mgmt-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mgmt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mgmt-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.mgmt-field input {
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-sm);
+  color: var(--text-light);
+  font-size: 0.95rem;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+}
+.mgmt-field input::placeholder { color: rgba(255,255,255,0.25); }
+.mgmt-field input:focus {
+  border-color: var(--gold);
+  background: rgba(255,255,255,0.08);
+}
+
+.mgmt-login-error {
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-sm);
+  color: #fca5a5;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.mgmt-login-btn {
+  margin-top: 8px;
+  padding: 13px;
+  background: var(--gold);
+  color: #07111f;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.mgmt-login-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.mgmt-login-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mgmt-login-note {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.2);
+}
+
+/* ── Console (logged-in) ─────────────────────────────────────────────────── */
+.mgmt-console-root {
+  min-height: 100vh;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+}
+
+.mgmt-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: rgba(12, 24, 44, 0.98);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.mgmt-topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+.mgmt-topbar-logo {
+  width: 28px; height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.mgmt-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.mgmt-topbar-email {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.mgmt-signout-btn {
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-full);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.mgmt-signout-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: var(--text-light);
+}
+
+.mgmt-console-body {
+  flex: 1;
+  padding: 0;
+}
+
+/* Make AdminModal work inline inside management page */
+.mgmt-console-body .admin-modal-overlay {
+  position: static;
+  background: transparent;
+}
+.mgmt-console-body .admin-modal-dialog {
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  min-height: calc(100vh - 53px);
+}
+

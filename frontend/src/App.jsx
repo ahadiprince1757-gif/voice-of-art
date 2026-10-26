@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EditorialHeader from "./components/EditorialHeader";
 import EditorialHeroSection from "./components/EditorialHeroSection";
 import EditorialShowsRail from "./components/EditorialShowsRail";
@@ -6,19 +7,21 @@ import StageWatchFeed from "./components/StageWatchFeed";
 import EditorialVideoModal from "./components/EditorialVideoModal";
 import BookingModal from "./components/BookingModal";
 import SchoolCalendar from "./components/SchoolCalendar";
-import AdminModal from "./components/AdminModal";
 import Footer from "./components/Footer";
 import Toast from "./components/Toast";
+import ManagementPage from "./pages/ManagementPage";
 import { CloseIcon } from "./components/Icons";
 
-export default function App() {
+// ─────────────────────────────────────────────────────────────────────────────
+// PublicApp — the customer-facing Voice of Art experience
+// ─────────────────────────────────────────────────────────────────────────────
+function PublicApp() {
   const [activeNav, setActiveNav] = useState("home");
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedShowForBooking, setSelectedShowForBooking] = useState("");
   const [selectedDateForBooking, setSelectedDateForBooking] = useState("");
   const [activeVideoForPlayer, setActiveVideoForPlayer] = useState(null);
   const [schoolModalOpen, setSchoolModalOpen] = useState(false);
-  const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [toast, setToast] = useState({ message: "", type: "success" });
@@ -57,12 +60,11 @@ export default function App() {
 
   return (
     <div className="editorial-app-root">
-      {/* Editorial Header */}
+      {/* Editorial Header — no admin button */}
       <EditorialHeader
         activeNav={activeNav}
         onNavClick={handleNavClick}
         onOpenBooking={() => handleOpenBooking()}
-        onOpenAdmin={() => setAdminModalOpen(true)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
       />
@@ -80,7 +82,6 @@ export default function App() {
           <StageWatchFeed
             onOpenBooking={handleOpenBooking}
             onToast={showToast}
-            onOpenAdmin={() => setAdminModalOpen(true)}
           />
         </div>
 
@@ -94,7 +95,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* Tasteful Minimalist Footer */}
+      {/* Tasteful Minimalist Footer — admin link removed */}
       <Footer
         onNavigate={handleNavClick}
         onOpenBooking={() => handleOpenBooking()}
@@ -103,7 +104,6 @@ export default function App() {
           const el = document.getElementById("watch-feed");
           if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
-        onOpenAdmin={() => setAdminModalOpen(true)}
       />
 
       {/* Protected Video Streaming Modal */}
@@ -150,15 +150,23 @@ export default function App() {
         </div>
       )}
 
-      {/* Admin Dashboard */}
-      {adminModalOpen && (
-        <AdminModal
-          onClose={() => setAdminModalOpen(false)}
-          onToast={showToast}
-        />
-      )}
-
       <Toast message={toast.message} type={toast.type} />
     </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// App — root with React Router
+// /management  → hidden admin console (Supabase Auth protected)
+// /*           → public-facing site
+// ─────────────────────────────────────────────────────────────────────────────
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/management/*" element={<ManagementPage />} />
+        <Route path="/*" element={<PublicApp />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
