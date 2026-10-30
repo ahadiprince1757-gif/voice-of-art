@@ -286,7 +286,18 @@ async function handleApi(request, response, url, origin) {
 
   // ── Public: shows ─────────────────────────────────────────────────────────
   if (request.method === "GET" && url.pathname === "/api/shows") {
-    if (!supabase) return reply(503, { error: "Database not configured." });
+    if (!supabase) {
+      try {
+        const dataFilePath = path.join(root, "data.json");
+        if (existsSync(dataFilePath)) {
+          const raw = JSON.parse(await import("node:fs/promises").then(fs => fs.readFile(dataFilePath, "utf8")));
+          return reply(200, (raw.shows || []).filter(s => s.active !== false));
+        }
+      } catch (err) {
+        console.warn("[Local shows fallback error]", err);
+      }
+      return reply(200, []);
+    }
     const { data, error } = await supabase
       .from("shows")
       .select("*")
@@ -312,7 +323,7 @@ async function handleApi(request, response, url, origin) {
     const month = url.searchParams.get("month");
     if (!/^\d{4}-\d{2}$/.test(month || ""))
       return reply(400, { error: "month must use YYYY-MM" });
-    if (!supabase) return reply(503, { error: "Database not configured." });
+    if (!supabase) return reply(200, { month, bookedDates: [] });
     const start = `${month}-01`;
     const end   = `${month}-31`;
     const { data, error } = await supabase

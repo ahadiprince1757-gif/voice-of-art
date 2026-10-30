@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabase";
 import AdminModal from "../components/AdminModal";
@@ -18,6 +19,11 @@ export default function ManagementPage() {
 
   // ── Check existing session on mount ────────────────────────────────────────
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
@@ -27,7 +33,7 @@ export default function ManagementPage() {
       setSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, []);
 
   const showToast = (message, type = "success") => {
@@ -39,6 +45,10 @@ export default function ManagementPage() {
   const handleSignIn = async (e) => {
     e.preventDefault();
     setLoginError("");
+    if (!supabase) {
+      setLoginError("Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.");
+      return;
+    }
     setSigningIn(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -62,7 +72,8 @@ export default function ManagementPage() {
 
   // ── Sign out ────────────────────────────────────────────────────────────────
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    if (supabase) await supabase.auth.signOut();
+    setSession(null);
   };
 
   // ── Loading state ───────────────────────────────────────────────────────────

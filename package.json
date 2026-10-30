@@ -4,9 +4,15 @@
   "description": "Voice of Art - Performing Arts Platform Web Application",
   "private": true,
   "scripts": {
-    "dev": "npm --prefix frontend run dev",
-    "build": "npm --prefix frontend run build",
+    "dev": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
     "backend": "npm --prefix backend start",
+    "frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
     "start": "npm --prefix frontend run build && npm --prefix backend start"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
   }
 }
