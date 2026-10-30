@@ -695,8 +695,28 @@ const mimeTypes = {
   ".3gp":  "video/3gpp",
 };
 
-async function serveFrontend(response, pathname) {
-  const requested = pathname === "/" ? "/index.html" : pathname;
+async function serveFrontend(response, pathname, origin) {
+  if (pathname === "/" || pathname === "" || pathname === "/index.html") {
+    const indexPath = path.join(frontendRoot, "index.html");
+    if (existsSync(indexPath)) {
+      response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      createReadStream(indexPath).pipe(response);
+      return;
+    }
+    return json(response, 200, {
+      status: "ok",
+      service: "🎭 Voice of Art API",
+      message: "API server is running successfully on Render",
+      endpoints: {
+        shows: "/api/shows",
+        videos: "/api/videos",
+        calendar: "/api/calendar",
+        paymentMethods: "/api/payment-methods"
+      }
+    }, origin);
+  }
+
+  const requested = pathname;
   const filePath  = path.resolve(frontendRoot, `.${requested}`);
   if (
     !filePath.startsWith(path.resolve(frontendRoot)) ||
@@ -709,19 +729,7 @@ async function serveFrontend(response, pathname) {
       createReadStream(indexPath).pipe(response);
       return;
     }
-    if (requested === "/" || requested === "") {
-      return json(response, 200, {
-        status: "ok",
-        service: "🎭 Voice of Art API",
-        message: "API server is running successfully on Render",
-        endpoints: {
-          shows: "/api/shows",
-          videos: "/api/videos",
-          paymentMethods: "/api/payment-methods"
-        }
-      });
-    }
-    response.writeHead(404); response.end("Not found"); return;
+    return json(response, 404, { error: `Not found: ${pathname}` }, origin);
   }
   response.writeHead(200, {
     "Content-Type": mimeTypes[path.extname(filePath).toLowerCase()] || "application/octet-stream",
@@ -740,7 +748,7 @@ const server = createServer(async (request, response) => {
     if (url.pathname.startsWith("/api/"))
       return await handleApi(request, response, url, origin);
 
-    return serveFrontend(response, url.pathname);
+    return serveFrontend(response, url.pathname, origin);
   } catch (error) {
     console.error(error);
     return json(response, 500, { error: "Internal server error" }, origin);

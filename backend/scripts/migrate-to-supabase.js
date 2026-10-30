@@ -144,8 +144,13 @@ if (paymentMethods.length === 0) {
     instructions:       m.instructions || "",
     active:             m.active !== false,
   }));
-  const { error } = await supabase.from("payment_methods").upsert(rows, { onConflict: "name" });
-  if (error) fail("payment_methods", error); else pass("payment_methods", rows.length);
+  const { data: existing } = await supabase.from("payment_methods").select("id").limit(1);
+  if (!existing || existing.length === 0) {
+    const { error } = await supabase.from("payment_methods").insert(rows);
+    if (error) fail("payment_methods", error); else pass("payment_methods", rows.length);
+  } else {
+    skip("payment_methods", "already seeded in Supabase");
+  }
 }
 
 // ── 5. Media (videos) ──────────────────────────────────────────────────────
