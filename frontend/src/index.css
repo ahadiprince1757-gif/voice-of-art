@@ -3400,3 +3400,460 @@ footer.editorial-footer {
   min-height: calc(100vh - 53px);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   YOUTUBE & SOCIAL MEDIA PHONE SCREEN OPTIMIZATIONS (< 768px)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Mobile Bottom Navigation Bar */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  html, body, .editorial-app-root {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .editorial-app-root {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 12px));
+  }
+
+  /* Fixed Bottom Nav Bar (YouTube / Instagram / TikTok style) */
+  .mobile-bottom-nav {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: rgba(10, 10, 10, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
+    padding-bottom: env(safe-area-inset-bottom, 8px);
+  }
+
+  .mobile-bottom-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 60px;
+    padding: 0 4px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .mobile-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 6px 0;
+    transition: color 0.15s ease, transform 0.15s ease;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-nav-item:active {
+    transform: scale(0.92);
+  }
+
+  .mobile-nav-item.active {
+    color: #f3d9ad;
+  }
+
+  .mobile-nav-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+  }
+
+  .mobile-nav-live-dot {
+    position: absolute;
+    top: -1px;
+    right: -4px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 1.5px solid #0a0a0a;
+    animation: livePulse 2s infinite;
+  }
+
+  @keyframes livePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.8; }
+  }
+
+  .mobile-nav-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-top: 2px;
+  }
+
+  .mobile-nav-active-pill {
+    position: absolute;
+    bottom: 2px;
+    width: 14px;
+    height: 2px;
+    border-radius: 1px;
+    background: #f3d9ad;
+    box-shadow: 0 0 8px rgba(243, 217, 173, 0.7);
+  }
+
+  /* Center Gold "Book" Action Pill (TikTok "+" button aesthetic) */
+  .mobile-nav-item.special-book {
+    color: #080808;
+    flex: 0 0 54px;
+  }
+
+  .mobile-nav-item.special-book .mobile-nav-icon-wrap {
+    width: 44px;
+    height: 34px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #080808;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.45);
+    margin-bottom: 2px;
+  }
+
+  .mobile-nav-item.special-book .mobile-nav-label {
+    color: #f59e0b;
+    font-weight: 700;
+  }
+
+  /* Compact YouTube-Style Top Header */
+  header.editorial-header {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .editorial-header-inner {
+    padding: 0;
+  }
+
+  .editorial-logo-img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .editorial-brand-title {
+    font-size: 0.95rem;
+  }
+
+  .editorial-brand-sub {
+    font-size: 0.48rem;
+  }
+
+  .editorial-book-pill {
+    display: none;
+  }
+
+  .editorial-actions {
+    gap: 8px;
+  }
+
+  /* YouTube-Style Category Filter Chips */
+  .stage-categories-bar {
+    padding: 8px 0;
+    background: #080808;
+    position: sticky;
+    top: 56px;
+    z-index: 50;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .stage-categories-container {
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .category-pills {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 8px;
+    padding-bottom: 2px;
+  }
+
+  .category-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cat-pill {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .cat-pill.active {
+    background: #f5efe6;
+    color: #080808;
+    font-weight: 700;
+    border-color: #f5efe6;
+  }
+
+  .feed-mode-toggle {
+    flex-shrink: 0;
+  }
+
+  .mode-btn {
+    padding: 5px 10px;
+    font-size: 0.74rem;
+  }
+
+  /* Edge-to-Edge Mobile Video Player (YouTube style) */
+  .stage-main-container {
+    padding: 0 !important;
+  }
+
+  .stage-feed-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .theatre-stage-card {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    margin: 0;
+    background: #000;
+  }
+
+  .stage-screen-box {
+    min-height: unset;
+    aspect-ratio: 16 / 9;
+    border-radius: 0;
+    width: 100vw;
+    background: #000;
+  }
+
+  /* Reels Mode: Immersive TikTok / Shorts 9:16 Aspect Ratio */
+  .stage-feed-layout.reels-layout .stage-screen-box {
+    aspect-ratio: 9 / 16;
+    max-height: 72vh;
+    margin: 0 auto;
+  }
+
+  /* Action Rail: Right-floating Touch Action Icons (Like, Comment, Share) */
+  .tiktok-action-rail {
+    position: absolute;
+    right: 12px;
+    bottom: 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 10;
+  }
+
+  .tiktok-action-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .tiktok-action-btn span {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .tiktok-action-btn.liked {
+    color: #ef4444;
+    border-color: #ef4444;
+  }
+
+  /* Stage Meta Bar Below Video */
+  .theatre-stage-info {
+    padding: 14px 16px;
+    background: #0d0d0d;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .stage-info-title {
+    font-size: 1.1rem;
+    line-height: 1.3;
+  }
+
+  .stage-info-synopsis {
+    font-size: 0.82rem;
+    color: #9ca3af;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* YouTube Related Video Feed on Phone */
+  .stage-sidebar-feed {
+    padding: 16px 12px;
+  }
+
+  .feed-header {
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+
+  .feed-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .feed-show-item {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 12px;
+    background: #121212;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .feed-thumbnail-box {
+    aspect-ratio: 16 / 9;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .feed-item-title {
+    font-size: 0.86rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .feed-item-category {
+    font-size: 0.65rem;
+  }
+
+  /* YouTube / TikTok Slide-Up Bottom Comments Sheet on Phone */
+  .comments-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    z-index: 1001;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .comments-drawer {
+    width: 100%;
+    max-height: 75vh;
+    background: #141414;
+    border-radius: 20px 20px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
+    padding: 12px 16px max(16px, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    animation: slideUpSheet 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .comments-drawer::before {
+    content: '';
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.25);
+    margin: 0 auto 12px;
+  }
+
+  @keyframes slideUpSheet {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  /* Single Column Productions Grid on Phone */
+  .editorial-rail-section {
+    padding: 24px 14px;
+  }
+
+  .editorial-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  .editorial-card {
+    border-radius: 14px;
+  }
+
+  /* Mobile Hero Section */
+  .editorial-hero-section {
+    padding: 16px 12px 24px;
+  }
+
+  .editorial-hero-card {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .editorial-hero-title {
+    font-size: 2rem;
+    line-height: 1.15;
+  }
+
+  .editorial-hero-desc {
+    font-size: 0.88rem;
+    margin-bottom: 20px;
+  }
+
+  .editorial-btn-ivory {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+  }
+
+  .editorial-btn-watch-trailer {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Booking & Feature Modals on Phone */
+  .overlay-backdrop, .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .feature-modal-dialog, .modal-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 20px 20px 0 0 !important;
+    max-height: 85vh;
+    padding: 24px 18px max(24px, env(safe-area-inset-bottom)) !important;
+    animation: slideUpSheet 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+

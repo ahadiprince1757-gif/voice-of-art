@@ -116,7 +116,19 @@ export default function StageWatchFeed({ onOpenBooking, onToast, onOpenAdmin }) 
     onToast("💬 Comment posted!");
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: activeVideo.title || "Voice of Art Productions",
+          text: `Check out "${activeVideo.title || "this performance"}" on Voice of Art`,
+          url: window.location.href,
+        });
+        return;
+      } catch (err) {
+        if (err.name === "AbortError") return;
+      }
+    }
     navigator.clipboard?.writeText(window.location.href);
     onToast("🔗 Link copied to clipboard!");
   };

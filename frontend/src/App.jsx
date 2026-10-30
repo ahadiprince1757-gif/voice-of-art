@@ -9,6 +9,7 @@ import BookingModal from "./components/BookingModal";
 import SchoolCalendar from "./components/SchoolCalendar";
 import Footer from "./components/Footer";
 import Toast from "./components/Toast";
+import MobileBottomNav from "./components/MobileBottomNav";
 import ManagementPage from "./pages/ManagementPage";
 import { CloseIcon } from "./components/Icons";
 
@@ -104,6 +105,13 @@ function PublicApp() {
           const el = document.getElementById("watch-feed");
           if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
+      />
+
+      {/* Social-App Style Bottom Navigation for Phones */}
+      <MobileBottomNav
+        activeNav={activeNav}
+        onNavClick={handleNavClick}
+        onOpenBooking={() => handleOpenBooking()}
       />
 
       {/* Protected Video Streaming Modal */}
