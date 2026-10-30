@@ -1,6 +1,6 @@
-// ── Supabase SQL Schema for Voice of Art ────────────────────────────────────
-// Run this entire file in: Supabase → SQL Editor → New query → Run
-// ─────────────────────────────────────────────────────────────────────────────
+-- ── Supabase SQL Schema for Voice of Art ────────────────────────────────────
+-- Run this entire file in: Supabase → SQL Editor → New query → Run
+-- ─────────────────────────────────────────────────────────────────────────────
 
 -- Enable UUID extension
 create extension if not exists "uuid-ossp";

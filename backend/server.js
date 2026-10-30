@@ -709,6 +709,18 @@ async function serveFrontend(response, pathname) {
       createReadStream(indexPath).pipe(response);
       return;
     }
+    if (requested === "/" || requested === "") {
+      return json(response, 200, {
+        status: "ok",
+        service: "🎭 Voice of Art API",
+        message: "API server is running successfully on Render",
+        endpoints: {
+          shows: "/api/shows",
+          videos: "/api/videos",
+          paymentMethods: "/api/payment-methods"
+        }
+      });
+    }
     response.writeHead(404); response.end("Not found"); return;
   }
   response.writeHead(200, {
