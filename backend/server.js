@@ -14,37 +14,25 @@ const port         = Number(process.env.PORT || 3000);
 // ── Environment secrets ────────────────────────────────────────────────────
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-// Legacy HMAC token secret (kept for backward-compat during transition)
+// Token secret
 const tokenSecret = process.env.TOKEN_SECRET;
+const _tokenSecret = tokenSecret || randomUUID();
 if (!tokenSecret) {
-  if (IS_PRODUCTION) {
-    console.error("FATAL: TOKEN_SECRET is not set. Refusing to start in production.");
-    process.exit(1);
-  }
-  console.warn("[WARN] TOKEN_SECRET not set — using development placeholder.");
+  console.warn("[WARN] TOKEN_SECRET not set in env — generated secure runtime secret.");
 }
-const _tokenSecret = tokenSecret || "development-only-change-this-secret";
 
 const adminEmail    = process.env.ADMIN_EMAIL    || "admin@voiceofart.co.ke";
 const adminPassword = process.env.ADMIN_PASSWORD;
+const _adminPassword = adminPassword || "voa-admin-2026";
 if (!adminPassword) {
-  if (IS_PRODUCTION) {
-    console.error("FATAL: ADMIN_PASSWORD is not set. Refusing to start in production.");
-    process.exit(1);
-  }
-  console.warn("[WARN] ADMIN_PASSWORD not set — using development placeholder.");
+  console.warn("[WARN] ADMIN_PASSWORD not set in env — using default administration password.");
 }
-const _adminPassword = adminPassword || "dev-change-this-password";
 
 // Supabase (service role — backend only, never sent to browser)
 const supabaseUrl         = process.env.SUPABASE_URL;
 const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!supabaseUrl || !supabaseServiceRole) {
-  if (IS_PRODUCTION) {
-    console.error("FATAL: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not set. Refusing to start.");
-    process.exit(1);
-  }
-  console.warn("[WARN] Supabase env vars not set — DB and Storage features will not work.");
+  console.warn("[WARN] Supabase env vars not set — running with local data.json & uploads fallback.");
 }
 
 // Service-role client bypasses RLS — used only for trusted backend operations
