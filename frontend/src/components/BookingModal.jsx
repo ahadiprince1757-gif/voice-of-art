@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
 import { useShows } from "../hooks/useShows";
-import { XIcon, TicketIcon, CheckIcon } from "./Icons";
+import { CloseIcon, TicketIcon, CheckIcon } from "./Icons";
 
 export default function BookingModal({ initialShow, initialDate, onClose, onToast }) {
   const [showTitle, setShowTitle] = useState(initialShow || "");
@@ -18,7 +18,7 @@ export default function BookingModal({ initialShow, initialDate, onClose, onToas
   // Fetch live shows list for the dropdown
   const { shows: availableShows, loading: showsLoading } = useShows();
 
-  // When the parent opens the modal with a specific show/date, sync them
+  // When parent opens modal with specific show/date, sync them
   useEffect(() => {
     if (initialShow) setShowTitle(initialShow);
     if (initialDate) setBookingDate(initialDate);
@@ -58,7 +58,7 @@ export default function BookingModal({ initialShow, initialDate, onClose, onToas
       return;
     }
 
-    // Phone minimum length (Kenyan numbers are at least 9 digits)
+    // Phone minimum length
     const digitsOnly = phone.replace(/\D/g, "");
     if (digitsOnly.length < 9) {
       onToast("Please enter a valid phone number (at least 9 digits).", "error");
@@ -79,7 +79,7 @@ export default function BookingModal({ initialShow, initialDate, onClose, onToas
       };
 
       await api.createBooking(payload);
-      onToast("🎉 Booking request received! We will contact you shortly.");
+      onToast("Booking request received! Our team will contact you shortly.");
       onClose();
     } catch (err) {
       console.error(err);
@@ -91,30 +91,38 @@ export default function BookingModal({ initialShow, initialDate, onClose, onToas
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-content modal-content-booking"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Ticket Header Banner */}
         <div className="modal-head">
           <div>
-            <div className="eyebrow" style={{ marginBottom: "6px" }}>Reserve Your Seat</div>
-            <h3 className="font-serif">Book a show.</h3>
+            <div className="booking-eyebrow">STAGE TICKETING & RESERVATIONS</div>
+            <h3 className="font-serif booking-title">Reserve Your Seats</h3>
           </div>
-          <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
-            <XIcon size={18} />
+          <button
+            className="modal-close-btn"
+            onClick={onClose}
+            aria-label="Close modal"
+          >
+            <CloseIcon size={16} />
           </button>
         </div>
 
         {paymentInfo && (
           <div className="payment-badge-box">
-            <CheckIcon size={18} />
+            <CheckIcon size={16} />
             <div>
               <strong>Official {paymentInfo.name} ({paymentInfo.provider})</strong>
-              <div style={{ fontSize: "0.78rem", color: "#047857" }}>
-                Paybill / Ref: {paymentInfo.accountReference} — payment instructions confirmed upon booking.
+              <div className="payment-badge-sub">
+                Paybill / Ref: {paymentInfo.accountReference} — instant seat confirmation upon booking.
               </div>
             </div>
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="booking-form">
           <div className="form-field">
             <label className="form-label">SELECT PRODUCTION</label>
             <select
@@ -135,7 +143,6 @@ export default function BookingModal({ initialShow, initialDate, onClose, onToas
                     </option>
                   ))
                 : !showsLoading && (
-                    // Fallback if API returned empty
                     <>
                       <option value="The Last Letter">The Last Letter (Nairobi • From KSh 500)</option>
                       <option value="Behind the Mask">Behind the Mask (KU • From KSh 400)</option>
@@ -160,7 +167,7 @@ export default function BookingModal({ initialShow, initialDate, onClose, onToas
             </div>
 
             <div className="form-field">
-              <label className="form-label">TICKETS / AUDIENCE</label>
+              <label className="form-label">TICKETS COUNT</label>
               <select
                 className="form-select"
                 value={tickets}
@@ -179,18 +186,18 @@ export default function BookingModal({ initialShow, initialDate, onClose, onToas
           </div>
 
           <div className="form-field">
-            <label className="form-label">INSTITUTION / SCHOOL NAME</label>
+            <label className="form-label">INSTITUTION OR SCHOOL (OPTIONAL)</label>
             <input
               type="text"
               className="form-input"
-              placeholder="e.g. Nairobi School / Individual attendee"
+              placeholder="e.g. Individual / School / Group"
               value={schoolName}
               onChange={(e) => setSchoolName(e.target.value)}
             />
           </div>
 
           <div className="form-field">
-            <label className="form-label">CONTACT FULL NAME *</label>
+            <label className="form-label">FULL NAME *</label>
             <input
               type="text"
               required
@@ -215,7 +222,7 @@ export default function BookingModal({ initialShow, initialDate, onClose, onToas
             </div>
 
             <div className="form-field">
-              <label className="form-label">PHONE / WHATSAPP *</label>
+              <label className="form-label">PHONE / MPESA NUMBER *</label>
               <input
                 type="tel"
                 required
@@ -227,19 +234,13 @@ export default function BookingModal({ initialShow, initialDate, onClose, onToas
             </div>
           </div>
 
-          <div className="form-help">
-            After submitting, our production coordinator will contact you via WhatsApp / Phone to confirm
-            ticket allocation and payment reference.
-          </div>
-
           <button
             type="submit"
-            className="btn btn-primary"
-            style={{ width: "100%", padding: "14px", fontSize: "1rem" }}
+            className="booking-submit-btn"
             disabled={isSubmitting}
           >
             <TicketIcon size={18} />
-            <span>{isSubmitting ? "Submitting request..." : "Request booking →"}</span>
+            <span>{isSubmitting ? "Processing Reservation..." : "Confirm Ticket Request"}</span>
           </button>
         </form>
       </div>

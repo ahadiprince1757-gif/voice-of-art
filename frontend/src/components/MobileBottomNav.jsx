@@ -1,18 +1,23 @@
 import React from "react";
 import { HomeIcon, FilmIcon, SparklesIcon, TicketIcon, SchoolIcon } from "./Icons";
 
-export default function MobileBottomNav({ activeNav, onNavClick, onOpenBooking }) {
+export default function MobileBottomNav({ activeNav, onNavClick, onOpenBooking, onOpenReels }) {
   const tabs = [
-    { id: "home", label: "Home", Icon: HomeIcon },
-    { id: "watch", label: "Watch", Icon: FilmIcon, isWatch: true },
-    { id: "shows", label: "Shows", Icon: SparklesIcon },
-    { id: "book", label: "Book", Icon: TicketIcon, isSpecial: true },
+    { id: "home",    label: "Home",  Icon: HomeIcon },
+    { id: "watch",   label: "Watch", Icon: FilmIcon,     isWatch: true },
+    { id: "shows",   label: "Shows", Icon: SparklesIcon },
+    { id: "book",    label: "Book",  Icon: TicketIcon,   isSpecial: true },
     { id: "schools", label: "Tours", Icon: SchoolIcon },
   ];
 
   const handleTabClick = (tab) => {
     if (tab.id === "book") {
-      onOpenBooking();
+      onOpenBooking?.();
+      return;
+    }
+    if (tab.id === "watch") {
+      // Always open immersive reels overlay from the mobile bottom nav
+      onOpenReels?.();
       return;
     }
     onNavClick(tab.id);
@@ -28,6 +33,7 @@ export default function MobileBottomNav({ activeNav, onNavClick, onOpenBooking }
           return (
             <button
               key={id}
+              id={`mobile-nav-${id}`}
               className={`mobile-nav-item ${isActive ? "active" : ""} ${isSpecial ? "special-book" : ""} ${isWatch ? "watch-tab" : ""}`}
               onClick={() => handleTabClick(tab)}
               aria-label={label}

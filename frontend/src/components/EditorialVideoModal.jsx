@@ -120,8 +120,9 @@ export default function EditorialVideoModal({ video, onClose, onOpenBooking }) {
               <button
                 className="control-btn"
                 onClick={() => setIsPlaying(!isPlaying)}
+                aria-label={isPlaying ? "Pause" : "Play"}
               >
-                {isPlaying ? "❚❚" : "▶"}
+                {isPlaying ? <span style={{ fontWeight: "bold", fontSize: "14px" }}>||</span> : <PlayIcon size={14} fill="currentColor" />}
               </button>
 
               <button

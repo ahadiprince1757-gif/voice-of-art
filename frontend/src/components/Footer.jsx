@@ -54,7 +54,6 @@ export default function Footer({
 
         <div className="editorial-footer-bottom">
           <p>© {new Date().getFullYear()} Voice of Art Productions. All rights reserved.</p>
-          <p className="footer-quote">Real Stories. Live on Stage.</p>
         </div>
       </div>
     </footer>

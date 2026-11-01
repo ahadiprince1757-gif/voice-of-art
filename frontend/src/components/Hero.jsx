@@ -6,16 +6,9 @@ export default function Hero({ onOpenBooking }) {
       <div className="container hero-container">
         <div className="hero-content">
           <div className="hero-eyebrow">THEATRE • FILM • LEARNING</div>
-
           <h1 className="hero-title font-serif">
-            Real Stories.<br />
-            <span className="hero-accent">Live</span> on Stage.
+            Voice of <span className="hero-accent">Art</span>
           </h1>
-
-          <p className="hero-description">
-            Experience captivating theatrical productions, bring live drama to your school
-            hall, and relive unforgettable stage stories anytime, anywhere.
-          </p>
 
           <div className="hero-actions">
             <button

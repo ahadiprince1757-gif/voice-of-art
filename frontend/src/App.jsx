@@ -7,9 +7,9 @@ import StageWatchFeed from "./components/StageWatchFeed";
 import EditorialVideoModal from "./components/EditorialVideoModal";
 import BookingModal from "./components/BookingModal";
 import SchoolCalendar from "./components/SchoolCalendar";
-import Footer from "./components/Footer";
 import Toast from "./components/Toast";
 import MobileBottomNav from "./components/MobileBottomNav";
+import MobileReelsFeed from "./components/MobileReelsFeed";
 import ManagementPage from "./pages/ManagementPage";
 import { CloseIcon } from "./components/Icons";
 
@@ -24,6 +24,8 @@ function PublicApp() {
   const [activeVideoForPlayer, setActiveVideoForPlayer] = useState(null);
   const [schoolModalOpen, setSchoolModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [reelsFeedOpen, setReelsFeedOpen] = useState(false);
 
   const [toast, setToast] = useState({ message: "", type: "success" });
 
@@ -51,6 +53,8 @@ function PublicApp() {
     } else if (navId === "home") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (navId === "watch" || navId === "live") {
+      // Desktop: scroll to the watch feed section
+      // Mobile: handled by MobileBottomNav → onOpenReels directly
       const el = document.getElementById("watch-feed");
       if (el) el.scrollIntoView({ behavior: "smooth" });
     } else {
@@ -61,13 +65,16 @@ function PublicApp() {
 
   return (
     <div className="editorial-app-root">
-      {/* Editorial Header — no admin button */}
+      {/* Editorial Header — top 3-line dropdown menu on mobile */}
       <EditorialHeader
         activeNav={activeNav}
         onNavClick={handleNavClick}
         onOpenBooking={() => handleOpenBooking()}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        activeCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+        onOpenSchoolTours={() => setSchoolModalOpen(true)}
       />
 
       <main>
@@ -92,27 +99,28 @@ function PublicApp() {
             onOpenBooking={handleOpenBooking}
             onPlayVideo={handlePlayVideo}
             searchQuery={searchQuery}
+            activeCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
           />
         </div>
       </main>
-
-      {/* Tasteful Minimalist Footer — admin link removed */}
-      <Footer
-        onNavigate={handleNavClick}
-        onOpenBooking={() => handleOpenBooking()}
-        onOpenSchoolBookings={() => setSchoolModalOpen(true)}
-        onOpenWatch={() => {
-          const el = document.getElementById("watch-feed");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
 
       {/* Social-App Style Bottom Navigation for Phones */}
       <MobileBottomNav
         activeNav={activeNav}
         onNavClick={handleNavClick}
         onOpenBooking={() => handleOpenBooking()}
+        onOpenReels={() => setReelsFeedOpen(true)}
       />
+
+      {/* Immersive TikTok / YouTube Shorts-Style Reels Overlay */}
+      {reelsFeedOpen && (
+        <MobileReelsFeed
+          onClose={() => { setReelsFeedOpen(false); setActiveNav("home"); }}
+          onOpenBooking={handleOpenBooking}
+          onToast={showToast}
+        />
+      )}
 
       {/* Protected Video Streaming Modal */}
       {activeVideoForPlayer && (

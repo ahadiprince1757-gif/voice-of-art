@@ -8,15 +8,7 @@ function BrandSlide({ onOpenBooking }) {
     <div className="editorial-hero-brand-slide">
       <div className="editorial-hero-left">
         <p className="editorial-eyebrow-label">THEATRE • FILM • LEARNING</p>
-        <h1 className="editorial-hero-headline font-serif">
-          Real Stories.<br />
-          <span className="editorial-hero-accent">Live</span> on Stage.
-        </h1>
-        <p className="editorial-hero-description">
-          Experience captivating theatrical productions, bring live drama to your school hall,
-          and relive unforgettable stage stories anytime, anywhere.
-        </p>
-        <div className="editorial-hero-cta-row">
+        <div className="editorial-hero-cta-row" style={{ marginTop: 20 }}>
           <button
             className="btn btn-primary editorial-hero-cta-primary"
             onClick={() => onOpenBooking("", "")}
@@ -24,18 +16,13 @@ function BrandSlide({ onOpenBooking }) {
             <TicketIcon size={18} />
             <span>Book Tickets Now</span>
           </button>
-          <button className="btn btn-secondary editorial-hero-cta-ghost">
-            <SparklesIcon size={16} />
-            <span>Explore Productions</span>
-          </button>
         </div>
       </div>
 
       <div className="editorial-hero-right editorial-hero-right--empty">
         <div className="hero-empty-stage">
-          <div className="hero-empty-curtain">🎭</div>
-          <p>Your stage videos will appear here</p>
-          <small>Upload from the Admin → Media panel</small>
+          <TicketIcon size={36} />
+          <p>Voice of Art Stage</p>
         </div>
       </div>
     </div>
@@ -94,7 +81,7 @@ function MediaSlide({ item, onOpenBooking, onPlayVideo }) {
           )}
         </div>
         {item.venue && (
-          <p className="hero-venue-tag">📍 {item.venue}{item.eventDate ? ` · ${item.eventDate}` : ""}</p>
+          <p className="hero-venue-tag">{item.venue}{item.eventDate ? ` · ${item.eventDate}` : ""}</p>
         )}
         {item.price && (
           <p className="hero-price-tag">{item.price}</p>
@@ -165,7 +152,7 @@ function UpcomingItem({ item, onPlayVideo }) {
       <div className="hero-upcoming-info">
         <span className="upcoming-category">{item.category}</span>
         <p className="upcoming-title">{item.title}</p>
-        {item.venue && <p className="upcoming-venue">📍 {item.venue}</p>}
+        {item.venue && <p className="upcoming-venue">{item.venue}</p>}
       </div>
     </div>
   );

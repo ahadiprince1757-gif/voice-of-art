@@ -39,8 +39,16 @@ function SkeletonCard() {
   );
 }
 
-export default function EditorialShowsRail({ onOpenBooking, onPlayVideo, searchQuery = "" }) {
-  const [activeTab, setActiveTab] = useState("all");
+export default function EditorialShowsRail({
+  onOpenBooking,
+  onPlayVideo,
+  searchQuery = "",
+  activeCategory,
+  onCategoryChange,
+}) {
+  const [internalTab, setInternalTab] = useState("all");
+  const activeTab = activeCategory !== undefined ? activeCategory : internalTab;
+  const setActiveTab = onCategoryChange || setInternalTab;
   const { shows, loading, error } = useShows();
 
   // Apply tab filter then search filter
@@ -76,7 +84,7 @@ export default function EditorialShowsRail({ onOpenBooking, onPlayVideo, searchQ
         {/* Error state */}
         {error && (
           <div className="shows-status-msg shows-status-msg--error">
-            <span>⚠️ {error}</span>
+            <span>{error}</span>
             <button
               className="shows-retry-btn"
               onClick={() => window.location.reload()}

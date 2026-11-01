@@ -161,7 +161,7 @@ export default function SchoolCalendar({ onOpenBooking, onToast }) {
               </div>
               <div className="legend-item">
                 <span className="legend-pill res"></span>
-                <span>Reserved by School (✓)</span>
+                <span>Reserved by School</span>
               </div>
               <div className="legend-item">
                 <span className="legend-pill sel"></span>

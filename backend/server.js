@@ -350,7 +350,29 @@ async function handleApi(request, response, url, origin) {
 
   // ── Public: video catalogue (no signed URLs — metadata only) ─────────────
   if (request.method === "GET" && url.pathname === "/api/media") {
-    if (!supabase) return reply(200, []);
+    if (!supabase) {
+      try {
+        const dataFilePath = path.join(root, "data.json");
+        if (existsSync(dataFilePath)) {
+          const raw = JSON.parse(await import("node:fs/promises").then(fs => fs.readFile(dataFilePath, "utf8")));
+          let list = (raw.media || []).map(m => ({
+            ...m,
+            isPublished: m.isPublished ?? true,
+            active: m.active ?? true,
+          }));
+          const type = url.searchParams.get("type");
+          const featured = url.searchParams.get("featured");
+          if (type) list = list.filter(m => (m.mediaType || "video") === type);
+          if (featured !== null && featured !== undefined) {
+            list = list.filter(m => String(m.featured) === featured);
+          }
+          return reply(200, list);
+        }
+      } catch (err) {
+        console.warn("[Local media fallback error]", err);
+      }
+      return reply(200, []);
+    }
     const type     = url.searchParams.get("type");
     const featured = url.searchParams.get("featured");
     let query = supabase.from("videos").select("id,title,description,category,venue,event_date,price_kes,is_published,is_featured,thumbnail_path,original_name,created_at").eq("is_published", true).order("created_at", { ascending: false });
@@ -480,7 +502,16 @@ async function handleApi(request, response, url, origin) {
 
   // Admin: list all media (including unpublished)
   if (request.method === "GET" && url.pathname === "/api/admin/media") {
-    if (!supabase) return reply(503, { error: "Database not configured." });
+    if (!supabase) {
+      try {
+        const dataFilePath = path.join(root, "data.json");
+        if (existsSync(dataFilePath)) {
+          const raw = JSON.parse(await import("node:fs/promises").then(fs => fs.readFile(dataFilePath, "utf8")));
+          return reply(200, raw.media || []);
+        }
+      } catch (err) {}
+      return reply(200, []);
+    }
     const { data, error } = await supabase
       .from("videos")
       .select("*")
@@ -747,6 +778,20 @@ const server = createServer(async (request, response) => {
   try {
     if (url.pathname.startsWith("/api/"))
       return await handleApi(request, response, url, origin);
+
+    if (url.pathname.startsWith("/uploads/")) {
+      const filename = path.basename(url.pathname);
+      const filePath = path.join(root, "uploads", filename);
+      if (existsSync(filePath) && (await stat(filePath)).isFile()) {
+        const ext = path.extname(filePath).toLowerCase();
+        response.writeHead(200, {
+          "Content-Type": mimeTypes[ext] || "video/mp4",
+          "Access-Control-Allow-Origin": "*",
+        });
+        createReadStream(filePath).pipe(response);
+        return;
+      }
+    }
 
     return serveFrontend(response, url.pathname, origin);
   } catch (error) {

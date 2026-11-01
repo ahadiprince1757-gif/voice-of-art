@@ -4,9 +4,42 @@
     "shows": 4,
     "bookings": 8,
     "paymentMethods": 2,
-    "media": 1
+    "media": 3
   },
-  "media": [],
+  "media": [
+    {
+      "id": 1,
+      "filename": "demo1.mp4",
+      "originalName": "demo1.mp4",
+      "title": "The Last Letter",
+      "description": "A moving stage story about choices, friendship and the price of silence. Performed live at Nairobi's finest theatre.",
+      "category": "Live production",
+      "mediaType": "video",
+      "showTitle": "The Last Letter",
+      "eventDate": "2026-11-14",
+      "venue": "Kenya National Theatre, Nairobi",
+      "price": "From KSh 500",
+      "duration": "1h 45m",
+      "featured": true,
+      "createdAt": "2026-10-20T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "filename": "demo2.mp4",
+      "originalName": "demo2.mp4",
+      "title": "Behind the Mask",
+      "description": "When the curtain rises, every character has something to hide. A gripping drama that will leave you breathless.",
+      "category": "Drama",
+      "mediaType": "video",
+      "showTitle": "Behind the Mask",
+      "eventDate": "2026-11-02",
+      "venue": "KU Amphitheatre, Nairobi",
+      "price": "From KSh 400",
+      "duration": "2h 10m",
+      "featured": false,
+      "createdAt": "2026-10-20T11:00:00.000Z"
+    }
+  ],
   "schools": [
     {
       "id": 1,
