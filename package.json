@@ -9,8 +9,8 @@
     "dev:frontend": "npm --prefix frontend run dev",
     "backend": "npm --prefix backend start",
     "frontend": "npm --prefix frontend run dev",
-    "build": "npm --prefix frontend run build",
-    "start": "npm --prefix frontend run build && npm --prefix backend start"
+    "build": "npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install",
+    "start": "npm --prefix backend start"
   },
   "devDependencies": {
     "concurrently": "^10.0.6"
